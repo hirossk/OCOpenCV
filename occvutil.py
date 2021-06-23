@@ -11,7 +11,7 @@ def cv2pil(imgCV):
     imgPIL = Image.fromarray(imgCV_RGB)
     return imgPIL
 
-def cv2_putText_1(img, text, org, fontFace, fontScale, color):
+def cvtextdraw(img, text, org, fontFace, fontScale, color):
     x, y = org
     b, g, r = color
     colorRGB = (r, g, b)

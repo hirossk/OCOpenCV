@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-from occvutil import cv2_putText_1
+from occvutil import cvtextdraw
 
 def main():
     # VideoCapture オブジェクトを取得します
@@ -39,7 +39,7 @@ def main():
             size = 40
             colorBGR = (255,0,0) # cv2.putText()と同じく、BGRの順で定義
 
-            frame3 = cv2_putText_1(img = frame3,
+            frame3 = cvtextdraw(img = frame3,
                             text = text,
                             org = (x,y),
                             fontFace = fontPIL,
@@ -59,10 +59,10 @@ def main():
         img_mask = cv2.inRange(hsv, lower_color, upper_color)
         filter = cv2.bitwise_and(frame4, frame4, mask=img_mask)
         edges = cv2.Canny(frame1,100,200)
-        cv2.imshow('Edges',edges)
-        cv2.imshow('Masks',filter)
-        cv2.imshow('gray',gry)
-        frame3 = cv2.drawKeypoints(frame3,keypoints,None)
+        #cv2.imshow('Edges',edges)
+        #cv2.imshow('Masks',filter)
+        #cv2.imshow('gray',gry)
+        #frame3 = cv2.drawKeypoints(frame3,keypoints,None)
         cv2.imshow('Face pick', frame3)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
