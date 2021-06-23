@@ -1,95 +1,73 @@
 import os
 import cv2
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from occvutil import cv2_putText_1
 
-def pil2cv(imgPIL):
-    imgCV_RGB = np.array(imgPIL, dtype = np.uint8)
-    imgCV_BGR = np.array(imgPIL)[:, :, ::-1]
-    return imgCV_BGR
+def main():
+    # VideoCapture オブジェクトを取得します
+    capture = cv2.VideoCapture(0)
 
-def cv2pil(imgCV):
-    imgCV_RGB = imgCV[:, :, ::-1]
-    imgPIL = Image.fromarray(imgCV_RGB)
-    return imgPIL
+    casceade_path = os.path.join(
+        cv2.data.haarcascades, "haarcascade_frontalface_alt.xml"
+    )
 
-def cv2_putText_1(img, text, org, fontFace, fontScale, color):
-    x, y = org
-    b, g, r = color
-    colorRGB = (r, g, b)
-    imgPIL = cv2pil(img)
-    draw = ImageDraw.Draw(imgPIL)
-    fontPIL = ImageFont.truetype(font = fontFace, size = fontScale)
-    draw.text(xy = (x,y), text = text, fill = colorRGB, font = fontPIL)
-    """
-    後でここに追加する
-    """
-    imgCV = pil2cv(imgPIL)
-    return imgCV
+    cascade = cv2.CascadeClassifier(casceade_path)
 
-# VideoCapture オブジェクトを取得します
-capture = cv2.VideoCapture(0)
+    print(capture)
+    while(True):
+        ret, frame = capture.read()
+        # resize the window
+        window = (800, 600)
+        frame1 = cv2.resize(frame,window)
+        frame2 = cv2.resize(frame,window)
+        frame3 = cv2.resize(frame,window)
+        frame4 = cv2.resize(frame,window)
 
-casceade_path = os.path.join(
-    cv2.data.haarcascades, "haarcascade_frontalface_alt.xml"
-)
+        face_list = cascade.detectMultiScale(frame)
 
-cascade = cv2.CascadeClassifier(casceade_path)
+        color=(0, 0, 255)
 
-print(capture)
-while(True):
-    ret, frame = capture.read()
-    # resize the window
-    window1 = (800, 600)
-    window2 = (800, 600)
-    window3 = (800, 600)
-    frame1 = cv2.resize(frame,window1)
-    frame2 = cv2.resize(frame,window2)
-    frame3 = cv2.resize(frame,window3)
+        if len(face_list) > 0 :
+            for face in face_list :
+                x, y, w, h = face 
+                cv2.rectangle(frame3, (x,y), (x+w*2, y+h*2), color, thickness=2) 
+        else:  
+            # 独自関数で日本語テキストを描写する
+            text = "顔が認識できませんでした。"
+            x, y = 180,280
+            fontPIL = "meiryo.ttc" # メイリオ
+            size = 40
+            colorBGR = (255,0,0) # cv2.putText()と同じく、BGRの順で定義
 
-    face_list = cascade.detectMultiScale(frame)
+            frame3 = cv2_putText_1(img = frame3,
+                            text = text,
+                            org = (x,y),
+                            fontFace = fontPIL,
+                            fontScale = size,
+                            color = colorBGR)
+        
+        hsv = cv2.cvtColor(frame4, cv2.COLOR_BGR2HSV)
+        gry = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+        lower_color = np.array([0, 0, 0])
+        upper_color = np.array([255, 255, 255])
 
-    color=(0, 0, 255)
+        #ORB
+        detector = cv2.ORB_create()
+        keypoints = detector.detect(gry)
 
-    if len(face_list) > 0 :
-        for face in face_list :
-            x, y, w, h = face 
-            cv2.rectangle(frame3, (x,y), (x+w*2, y+h*2), color, thickness=2) 
-    else:  
-        # 独自関数で日本語テキストを描写する
-        text = "顔が認識できませんでした。"
-        x, y = 180,280
-        fontPIL = "meiryo.ttc" # メイリオ
-        size = 40
-        colorBGR = (255,0,0) # cv2.putText()と同じく、BGRの順で定義
+        img_mask = cv2.inRange(hsv, lower_color, upper_color)
+        filter = cv2.bitwise_and(frame4, frame4, mask=img_mask)
+        edges = cv2.Canny(frame1,100,200)
+        cv2.imshow('Edges',edges)
+        cv2.imshow('Masks',filter)
+        cv2.imshow('gray',gry)
+        frame3 = cv2.drawKeypoints(frame3,keypoints,None)
+        cv2.imshow('Face pick', frame3)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-        frame3 = cv2_putText_1(img = frame3,
-                        text = text,
-                        org = (x,y),
-                        fontFace = fontPIL,
-                        fontScale = size,
-                        color = colorBGR)
-    
-    hsv = cv2.cvtColor(frame2, cv2.COLOR_BGR2HSV)
-    gry = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
-    lower_color = np.array([20, 50, 50])
-    upper_color = np.array([200, 200, 200])
+    capture.release()
+    cv2.destroyAllWindows()
 
-    #ORB
-    detector = cv2.ORB_create()
-    keypoints = detector.detect(gry)
-
-    img_mask = cv2.inRange(hsv, lower_color, upper_color)
-    img_color = cv2.bitwise_and(frame2, frame2, mask=img_mask)
-    edges = cv2.Canny(frame1,100,200)
-    cv2.imshow('Edges',edges)
-    #cv2.imshow('Masks',img_color)
-    cv2.imshow('gray',gry)
-    frame3 = cv2.drawKeypoints(frame3,keypoints,None)
-    cv2.imshow('Face pick', frame3)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-capture.release()
-cv2.destroyAllWindows()
-
+if __name__ == "__main__":
+    main()
