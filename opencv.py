@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-from occvutil import cvtextdraw
+from occvutil import cvtextdraw,changedH,changedS,changedV
 
 def main():
     # VideoCapture オブジェクトを取得します
@@ -49,8 +49,8 @@ def main():
         #色の濃さ
         hsv = cv2.cvtColor(frame4, cv2.COLOR_BGR2HSV)
         gry = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
-        lower_color = np.array([0, 0, 0])
-        upper_color = np.array([255, 255, 255])
+        lower_color = np.array([100, 0, 0])
+        upper_color = np.array([120, 255, 255])
 
         #ORB
         detector = cv2.ORB_create()
@@ -59,10 +59,14 @@ def main():
         img_mask = cv2.inRange(hsv, lower_color, upper_color)
         filter = cv2.bitwise_and(frame4, frame4, mask=img_mask)
         edges = cv2.Canny(frame1,100,200)
-        #cv2.imshow('Edges',edges)
-        #cv2.imshow('Masks',filter)
-        #cv2.imshow('gray',gry)
-        #frame3 = cv2.drawKeypoints(frame3,keypoints,None)
+
+        frame1 = changedS(frame1, 2.0, 20)
+
+        cv2.imshow('Edges',edges)
+        cv2.imshow('Masks',filter)
+        cv2.imshow('gray',gry)
+        cv2.imshow('Changed H',frame1)
+        frame3 = cv2.drawKeypoints(frame3,keypoints,None)
         cv2.imshow('Face pick', frame3)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
