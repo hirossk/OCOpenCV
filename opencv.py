@@ -46,6 +46,7 @@ def main():
                             fontScale = size,
                             color = colorBGR)
         
+        #色の濃さ
         hsv = cv2.cvtColor(frame4, cv2.COLOR_BGR2HSV)
         gry = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
         lower_color = np.array([0, 0, 0])
