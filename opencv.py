@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 from occvutil import cvtextdraw,changedH,changedS,changedV
+from convert import convertframe
 
 def main():
     # VideoCapture オブジェクトを取得します
@@ -60,7 +61,8 @@ def main():
         filter = cv2.bitwise_and(frame4, frame4, mask=img_mask)
         edges = cv2.Canny(frame1,100,200)
 
-        frame1 = changedS(frame1, 2.0, 20)
+        frame1 = convertframe(frame1)
+
 
         cv2.imshow('Edges',edges)
         cv2.imshow('Masks',filter)
