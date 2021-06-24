@@ -12,6 +12,7 @@ def changedSV(bgr_img, alpha, beta, color_idx):
 def changedH(bgr_img, shift):
     hsvimage = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2HSV_FULL) # BGR->HSV
     hi = hsvimage[:,:,0].astype(np.int32)
+    shift = shift * 255 / 360
     if shift < 0:
         nhi = hi.flatten()
         for px in nhi:

@@ -28,12 +28,14 @@ def main():
 
         color=(0, 0, 255)
 
+        #顔認識ができたかどうか確認
         if len(face_list) > 0 :
+            #できたとき
             for face in face_list :
                 x, y, w, h = face 
                 cv2.rectangle(frame3, (x,y), (x+w*2, y+h*2), color, thickness=2) 
         else:  
-            # 独自関数で日本語テキストを描写する
+            #できなかったとき
             text = "顔が認識できませんでした。"
             x, y = 180,280
             fontPIL = "meiryo.ttc" # メイリオ
@@ -48,24 +50,27 @@ def main():
                             color = colorBGR)
         
         #色の濃さ
-        hsv = cv2.cvtColor(frame4, cv2.COLOR_BGR2HSV)
+        #hsv = cv2.cvtColor(frame4, cv2.COLOR_BGR2HSV)
         gry = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
-        lower_color = np.array([100, 0, 0])
-        upper_color = np.array([120, 255, 255])
+        #lower_color = np.array([100, 0, 0])
+        #upper_color = np.array([120, 255, 255])
 
         #ORB
         detector = cv2.ORB_create()
         keypoints = detector.detect(gry)
 
-        img_mask = cv2.inRange(hsv, lower_color, upper_color)
-        filter = cv2.bitwise_and(frame4, frame4, mask=img_mask)
-        edges = cv2.Canny(frame1,100,200)
+        #img_mask = cv2.inRange(hsv, lower_color, upper_color)
+        #filter = cv2.bitwise_and(frame4, frame4, mask=img_mask)
 
+        #エッジ強調
+        edges = cv2.Canny(gry,100,200)
+
+        #色を変換する
         frame1 = convertframe(frame1)
 
 
         cv2.imshow('Edges',edges)
-        cv2.imshow('Masks',filter)
+        #cv2.imshow('Masks',gry)
         cv2.imshow('gray',gry)
         cv2.imshow('Changed H',frame1)
         frame3 = cv2.drawKeypoints(frame3,keypoints,None)
