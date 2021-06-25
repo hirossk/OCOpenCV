@@ -41,7 +41,7 @@ def main():
             x, y = 180,280
             fontPIL = "meiryo.ttc" # メイリオ
             size = 40
-            colorBGR = (255,0,0) # cv2.putText()と同じく、BGRの順で定義
+            colorBGR = (255,0,0) # Red Blue Greenの順
 
             imgface = cvtextdraw(img = frame3,
                             text = text,
@@ -58,6 +58,18 @@ def main():
 
         #色を変換する
         hsv = convertframe(frame1,var)
+        text = "varの値は" + str(var) + "です"
+        x, y = 250,280
+        fontPIL = "meiryo.ttc" # メイリオ
+        size = 40
+        colorBGR = (255,0,0) # Red Blue Greenの順
+
+        hsv = cvtextdraw(img = hsv,
+                            text = text,
+                            org = (x,y),
+                            fontFace = fontPIL,
+                            fontScale = size,
+                            color = colorBGR)
 
         #エッジ協調の出力
         #cv2.imshow('Edges',edges)
