@@ -22,11 +22,10 @@ def main():
         frame1 = cv2.resize(frame,window)
         frame2 = cv2.resize(frame,window)
         frame3 = cv2.resize(frame,window)
-        frame4 = cv2.resize(frame,window)
 
+        #顔認識の本体です。ここで認識（delect）します。
         face_list = cascade.detectMultiScale(frame)
-
-        color=(0, 0, 255)
+        color=(0, 0, 255) #Blue Green Redの順に0～255の間で指定します。
 
         #顔認識ができたかどうか確認
         if len(face_list) > 0 :
@@ -36,19 +35,13 @@ def main():
                 cv2.rectangle(frame3, (x,y), (x+w*2, y+h*2), color, thickness=2) 
             imgface = frame3
         else:  
-            #できなかったとき
-            text = "顔が認識できませんでした。"
-            x, y = 180,280
-            fontPIL = "meiryo.ttc" # メイリオ
-            size = 40
-            colorBGR = (255,0,0) # Red Blue Greenの順
-
+            #出来なかったとき
             imgface = cvtextdraw(img = frame3,
-                            text = text,
-                            org = (x,y),
-                            fontFace = fontPIL,
-                            fontScale = size,
-                            color = colorBGR)
+                            text = "顔が認識できませんでした。",
+                            org = (180,280),
+                            fontFace = "meiryo.ttc",
+                            fontScale = 40,
+                            color = (255,0,0))
         
         #カラーからモノクロへ変換
         gry = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
@@ -56,25 +49,20 @@ def main():
         #エッジ強調画像の生成
         edges = cv2.Canny(gry,100,200)
 
-        #色を変換する
+        #色を変換する　中身はconvertに記載
         hsv = convertframe(frame1,var)
-        text = "varの値は" + str(var) + "です"
-        x, y = 250,280
-        fontPIL = "meiryo.ttc" # メイリオ
-        size = 40
-        colorBGR = (255,0,0) # Red Blue Greenの順
 
-        hsv = cvtextdraw(img = hsv,
-                            text = text,
-                            org = (x,y),
-                            fontFace = fontPIL,
-                            fontScale = size,
-                            color = colorBGR)
+        #hsv = cvtextdraw(img = hsv,
+        #                    text = "varの値は" + str(var) + "です",
+        #                    org = (250,280),
+        #                    fontFace = "meiryo.ttc",
+        #                    fontScale = 40,
+        #                    color = (255,0,0))
 
-        #エッジ協調の出力
-        #cv2.imshow('Edges',edges)
         #グレイ映像の出力
-        #cv2.imshow('gray',gry)
+        cv2.imshow('gray',gry)
+        #エッジ強調の出力
+        #cv2.imshow('Edges',edges)
         #hsv変換後の出力
         cv2.imshow('ChangedHSV',hsv)
         #顔認識の出力
@@ -83,14 +71,13 @@ def main():
         #キー入力で終了します
         key = cv2.waitKey(1)
         if key & 0xFF == ord('q'):
-                break
-        if key & 0xFF == ord('u'):
-            if var < 200:
-                var = var + 10
-        if key & 0xFF == ord('d'):
-            if var > -200:
-                var = var - 10
-        
+            break
+#        if key & 0xFF == ord('u'):
+#            if var < 200:
+#                var = var + 10
+#        if key & 0xFF == ord('d'):
+#            if var > -200:
+#                var = var - 10
 
     capture.release()
     cv2.destroyAllWindows()
