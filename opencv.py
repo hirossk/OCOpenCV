@@ -5,6 +5,7 @@ from occvutil import cvtextdraw,changedH,changedS,changedV
 from convert import convertframe
 
 def main():
+    var = 0
     # VideoCapture オブジェクトを取得します
     capture = cv2.VideoCapture(0)
 
@@ -14,7 +15,6 @@ def main():
 
     cascade = cv2.CascadeClassifier(casceade_path)
 
-    print(capture)
     while(True):
         ret, frame = capture.read()
         # resize the window
@@ -57,18 +57,28 @@ def main():
         edges = cv2.Canny(gry,100,200)
 
         #色を変換する
-        hsv = convertframe(frame1)
+        hsv = convertframe(frame1,var)
 
         #エッジ協調の出力
-        cv2.imshow('Edges',edges)
+        #cv2.imshow('Edges',edges)
         #グレイ映像の出力
-        cv2.imshow('gray',gry)
+        #cv2.imshow('gray',gry)
         #hsv変換後の出力
-        cv2.imshow('Changed H',hsv)
+        cv2.imshow('ChangedHSV',hsv)
         #顔認識の出力
-        cv2.imshow('Face pick', imgface)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        #cv2.imshow('Face pick', imgface)
+
+        #キー入力で終了します
+        key = cv2.waitKey(1)
+        if key & 0xFF == ord('q'):
+                break
+        if key & 0xFF == ord('u'):
+            if var < 200:
+                var = var + 10
+        if key & 0xFF == ord('d'):
+            if var > -200:
+                var = var - 10
+        
 
     capture.release()
     cv2.destroyAllWindows()
