@@ -18,7 +18,7 @@ def main():
     while(True):
         ret, frame = capture.read()
         # resize the window
-        window = (800, 600)
+        window = (800,600)
         frame1 = cv2.resize(frame,window)
         frame2 = cv2.resize(frame,window)
         frame3 = cv2.resize(frame,window)
@@ -32,7 +32,7 @@ def main():
             #できたとき
             for face in face_list :
                 x, y, w, h = face 
-                cv2.rectangle(frame3, (x,y), (x+w*2, y+h*2), color, thickness=2) 
+                cv2.rectangle(frame3, (int(x*1.2),int(y*1.2)), (int(x+w*1.6), int(y+h*1.6)), color, thickness=2) 
             imgface = frame3
         else:  
             #出来なかったとき
@@ -66,7 +66,7 @@ def main():
         #hsv変換後の出力
         #cv2.imshow('ChangedHSV',hsv)
         #顔認識の出力
-        #cv2.imshow('Face pick', imgface)
+        cv2.imshow('Face pick', imgface)
 
         #キー入力で終了します
         key = cv2.waitKey(1)
