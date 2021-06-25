@@ -53,7 +53,7 @@ def main():
         hsv = convertframe(frame1,var)
 
         #hsv = cvtextdraw(img = hsv,
-        #                    text = "varの値は" + str(var) + "です",
+        #                    text = "変数の値は000です",
         #                    org = (250,280),
         #                    fontFace = "meiryo.ttc",
         #                    fontScale = 40,
