@@ -42,39 +42,30 @@ def main():
             size = 40
             colorBGR = (255,0,0) # cv2.putText()と同じく、BGRの順で定義
 
-            frame3 = cvtextdraw(img = frame3,
+            face = cvtextdraw(img = frame3,
                             text = text,
                             org = (x,y),
                             fontFace = fontPIL,
                             fontScale = size,
                             color = colorBGR)
         
-        #色の濃さ
-        #hsv = cv2.cvtColor(frame4, cv2.COLOR_BGR2HSV)
+        #カラーからモノクロへ変換
         gry = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
-        #lower_color = np.array([100, 0, 0])
-        #upper_color = np.array([120, 255, 255])
 
-        #ORB
-        detector = cv2.ORB_create()
-        keypoints = detector.detect(gry)
-
-        #img_mask = cv2.inRange(hsv, lower_color, upper_color)
-        #filter = cv2.bitwise_and(frame4, frame4, mask=img_mask)
-
-        #エッジ強調
+        #エッジ強調画像の生成
         edges = cv2.Canny(gry,100,200)
 
         #色を変換する
-        frame1 = convertframe(frame1)
+        hsv = convertframe(frame1)
 
-
+        #エッジ協調の出力
         cv2.imshow('Edges',edges)
-        #cv2.imshow('Masks',gry)
+        #グレイ映像の出力
         cv2.imshow('gray',gry)
-        cv2.imshow('Changed H',frame1)
-        frame3 = cv2.drawKeypoints(frame3,keypoints,None)
-        cv2.imshow('Face pick', frame3)
+        #hsv変換後の出力
+        cv2.imshow('Changed H',hsv)
+        #顔認識の出力
+        cv2.imshow('Face pick', face)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
