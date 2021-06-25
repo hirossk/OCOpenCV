@@ -66,7 +66,7 @@ def main():
         #hsv変換後の出力
         #cv2.imshow('ChangedHSV',hsv)
         #顔認識の出力
-        cv2.imshow('Face pick', imgface)
+        #cv2.imshow('Face pick', imgface)
 
         #キー入力で終了します
         key = cv2.waitKey(1)
