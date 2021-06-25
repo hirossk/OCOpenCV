@@ -34,6 +34,7 @@ def main():
             for face in face_list :
                 x, y, w, h = face 
                 cv2.rectangle(frame3, (x,y), (x+w*2, y+h*2), color, thickness=2) 
+            imgface = frame3
         else:  
             #できなかったとき
             text = "顔が認識できませんでした。"
@@ -42,7 +43,7 @@ def main():
             size = 40
             colorBGR = (255,0,0) # cv2.putText()と同じく、BGRの順で定義
 
-            face = cvtextdraw(img = frame3,
+            imgface = cvtextdraw(img = frame3,
                             text = text,
                             org = (x,y),
                             fontFace = fontPIL,
@@ -65,7 +66,7 @@ def main():
         #hsv変換後の出力
         cv2.imshow('Changed H',hsv)
         #顔認識の出力
-        cv2.imshow('Face pick', face)
+        cv2.imshow('Face pick', imgface)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
