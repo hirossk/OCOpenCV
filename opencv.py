@@ -64,7 +64,7 @@ def main():
         #エッジ強調の出力
         #cv2.imshow('Edges',edges)
         #hsv変換後の出力
-        cv2.imshow('ChangedHSV',hsv)
+        #cv2.imshow('ChangedHSV',hsv)
         #顔認識の出力
         #cv2.imshow('Face pick', imgface)
 
