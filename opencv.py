@@ -24,7 +24,7 @@ def main():
         frame3 = cv2.resize(frame,window)
 
         #顔認識の本体です。ここで認識（delect）します。
-        face_list = cascade.detectMultiScale(frame)
+        face_list = list() #face_list = cascade.detectMultiScale(frame)
         color=(0, 0, 255) #Blue Green Redの順に0～255の間で指定します。
 
         #顔認識ができたかどうか確認
