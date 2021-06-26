@@ -17,7 +17,7 @@ def main():
         cimg = cv2.medianBlur(cimg,5)
         gray = cv2.cvtColor(cimg, cv2.COLOR_BGR2GRAY)
         circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT, 
-            dp=1.0, minDist=150, param1=80, param2=97)
+            dp=1.0, minDist=150, param1=50, param2=65)
 
         if circles is not None:
             circles = np.uint16(np.around(circles))
