@@ -5,11 +5,11 @@ import pprint
 from convert import convertframe
 import boto3
 from tempfile import gettempdir
-from contextlib import closing
 
-def detect_labels_local_file(photo):
+def detect_labels_local_file(photo,orgframe):
     client=boto3.client('rekognition')
-
+    window = (800,600)
+    frame2 = cv2.resize(orgframe,window)
     with open(photo, 'rb') as image:
         photoimg = image.read()
         textresp = client.detect_text(Image={'Bytes': photoimg})
@@ -19,12 +19,20 @@ def detect_labels_local_file(photo):
     for label in labelresp['Labels']:
         print (label['Name'] + ' : ' + str(label['Instances']))
         if label['Instances'] != None:
-            for a in  label['Instances']:
-                print('BoundingBox : ' + str(a['BoundingBox']))
+            for instance in  label['Instances']:
+                print('BoundingBox : ' + str(instance['BoundingBox']))
+                left = int(instance['BoundingBox']['Left'] * 800)
+                top = int(instance['BoundingBox']['Top'] * 600)
+                width = int(instance['BoundingBox']['Width'] * 800)
+                height = int(instance['BoundingBox']['Height'] * 600)
+                print(str(left) + ":" + str(top)+ ":" + str(width)+ ":" + str(height))
+                cv2.rectangle(frame2,(left,top),(width+left,height+top) , color=(0, 0, 255), thickness=2) 
+    
     for label in textresp['TextDetections']:
         print ('Text is : ' + str(label['DetectedText']) + '\n' +
                str(label['DetectedText']) + str(label['Geometry']['BoundingBox']))
     # pprint.pprint(textresp['TextDetections'])
+    cv2.imshow('探知',frame2)
     return len(labelresp['Labels'])
 
 def main():
@@ -47,7 +55,7 @@ def main():
             break
         if key & 0xFF == ord('s'):
             result = cv2.imwrite("detect.jpg",frame1)
-            detect_labels_local_file("detect.jpg")
+            detect_labels_local_file("detect.jpg",frame1)
             print(result)
 #        if key & 0xFF == ord('u'):
 #            if var < 200:
