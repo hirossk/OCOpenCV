@@ -11,13 +11,21 @@ def detect_labels_local_file(photo):
     client=boto3.client('rekognition')
 
     with open(photo, 'rb') as image:
-        response = client.detect_labels(Image={'Bytes': image.read()})
-    pprint.pprint(response)
+        photoimg = image.read()
+        textresp = client.detect_text(Image={'Bytes': photoimg})
+        labelresp = client.detect_labels(Image={'Bytes': photoimg})
+    # pprint.pprint(labelresp)
     print('Detected labels in ' + photo) 
-    for label in response['Labels']:
+    for label in labelresp['Labels']:
         print (label['Name'] + ' : ' + str(label['Instances']))
-        
-    return len(response['Labels'])
+        if label['Instances'] != None:
+            for a in  label['Instances']:
+                print('BoundingBox : ' + str(a['BoundingBox']))
+    for label in textresp['TextDetections']:
+        print ('Text is : ' + str(label['DetectedText']) + '\n' +
+               str(label['DetectedText']) + str(label['Geometry']))
+    # pprint.pprint(textresp['TextDetections'])
+    return len(labelresp['Labels'])
 
 def main():
     var = 0
