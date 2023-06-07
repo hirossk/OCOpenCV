@@ -23,7 +23,7 @@ def detect_labels_local_file(photo):
                 print('BoundingBox : ' + str(a['BoundingBox']))
     for label in textresp['TextDetections']:
         print ('Text is : ' + str(label['DetectedText']) + '\n' +
-               str(label['DetectedText']) + str(label['Geometry']))
+               str(label['DetectedText']) + str(label['Geometry']['BoundingBox']))
     # pprint.pprint(textresp['TextDetections'])
     return len(labelresp['Labels'])
 
@@ -36,7 +36,7 @@ def main():
     while(True):
         ret, frame = capture.read()
         # resize the window
-        window = (1024,600)
+        window = (800,600)
         frame1 = cv2.resize(frame,window)
         #グレイ映像の出力
         cv2.imshow('camera',frame1)
