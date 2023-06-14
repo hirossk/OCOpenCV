@@ -8,7 +8,7 @@ from tempfile import gettempdir
 
 def detect_labels_local_file(photo,orgframe):
     client=boto3.client('rekognition')
-    window = (800,600)
+    window = (1024,600)
     frame2 = cv2.resize(orgframe,window)
     with open(photo, 'rb') as image:
         photoimg = image.read()
@@ -21,9 +21,9 @@ def detect_labels_local_file(photo,orgframe):
         if label['Instances'] != None:
             for instance in  label['Instances']:
                 print('BoundingBox : ' + str(instance['BoundingBox']))
-                left = int(instance['BoundingBox']['Left'] * 800)
+                left = int(instance['BoundingBox']['Left'] * 1024)
                 top = int(instance['BoundingBox']['Top'] * 600)
-                width = int(instance['BoundingBox']['Width'] * 800)
+                width = int(instance['BoundingBox']['Width'] * 1024)
                 height = int(instance['BoundingBox']['Height'] * 600)
                 print(str(left) + ":" + str(top)+ ":" + str(width)+ ":" + str(height))
                 cv2.rectangle(frame2,(left,top),(width+left,height+top) , color=(0, 0, 255), thickness=2) 
@@ -44,7 +44,7 @@ def main():
     while(True):
         ret, frame = capture.read()
         # resize the window
-        window = (800,600)
+        window = (1024,600)
         frame1 = cv2.resize(frame,window)
         #グレイ映像の出力
         cv2.imshow('camera',frame1)
@@ -69,3 +69,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
